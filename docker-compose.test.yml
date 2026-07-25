@@ -1,0 +1,30 @@
+services:
+  tasks_test_database:
+    image: postgres:18-alpine
+    container_name: tasks_test_database
+    restart: always
+    environment:
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-thisisapassword}
+      POSTGRES_DB: ${DATABASE_DB:-tasks_test_database}
+    ports:
+      - "127.0.0.1:${DATABASE_PORT:-5434}:5432"
+    volumes:
+      - tasks_test_database_data:/var/lib/postgresql
+    networks:
+      - tasks_test_backend
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${DATABASE_USER:-postgres} -d ${DATABASE_DB:-tasks_test_database}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
+volumes:
+  tasks_test_database_data:
+    name: tasks_test_database_data
+
+networks:
+  tasks_test_backend:
+    name: tasks_test_backend
+    driver: bridge
