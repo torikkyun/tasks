@@ -24,11 +24,6 @@ export class PrismaService
     super({
       adapter,
       log: ["error", "warn"],
-      omit: {
-        staff: {
-          passwordHash: true,
-        },
-      },
     });
   }
 

@@ -1,6 +1,6 @@
 import { Prisma } from "@/generated/prisma/client";
 
-const SOFT_DELETE_MODELS = ["User", "Category", "Post", "Job"] as const;
+const SOFT_DELETE_MODELS = ["Staff"] as const;
 
 type SoftDeleteModel = (typeof SOFT_DELETE_MODELS)[number];
 

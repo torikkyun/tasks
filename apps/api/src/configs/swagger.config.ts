@@ -3,8 +3,8 @@ import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
 
 function setupSwagger(app: INestApplication) {
   const config = new DocumentBuilder()
-    .setTitle("Legal Case Management System")
-    .setDescription("API documentation for the Legal Case Management System")
+    .setTitle("Task Management API")
+    .setDescription("API documentation for the Task Management API")
     .setVersion("1.0")
     .addBearerAuth({
       name: "Authorization",

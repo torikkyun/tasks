@@ -10,7 +10,7 @@ import { PrismaService } from "@/infrastructure/database/prisma.service";
 
 @ApiTags("Health")
 @Public()
-@Controller("api/health")
+@Controller("health")
 export class HealthController {
   constructor(
     private readonly health: HealthCheckService,
