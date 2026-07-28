@@ -9,25 +9,25 @@ const prisma = new PrismaClient({ adapter });
 
 async function seedDevelopment() {
   const adminRole = await prisma.role.upsert({
-    where: { roleCode: "ADMIN" },
+    where: { code: "ADMIN" },
     update: {},
-    create: { roleName: "Quản trị viên", roleCode: "ADMIN" },
+    create: { name: "Quản trị viên", code: "ADMIN" },
   });
   await prisma.role.upsert({
-    where: { roleCode: "MANAGER" },
+    where: { code: "MANAGER" },
     update: {},
-    create: { roleName: "Quản lý", roleCode: "MANAGER" },
+    create: { name: "Quản lý", code: "MANAGER" },
   });
   await prisma.role.upsert({
-    where: { roleCode: "USER" },
+    where: { code: "USER" },
     update: {},
-    create: { roleName: "Người dùng", roleCode: "USER" },
+    create: { name: "Người dùng", code: "USER" },
   });
 
   const itDepartment = await prisma.department.upsert({
-    where: { departmentCode: "IT" },
+    where: { code: "IT" },
     update: {},
-    create: { departmentName: "Phòng IT", departmentCode: "IT" },
+    create: { name: "Phòng IT", code: "IT" },
   });
 
   const passwordHash = await bcrypt.hash("thisisapassword123", 10);
