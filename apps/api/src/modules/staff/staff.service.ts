@@ -18,7 +18,7 @@ import { InMemoryCacheService } from "@/infrastructure/cache/in-memory-cache.ser
 @Injectable()
 export class StaffService {
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prisma: PrismaService,
     private readonly cacheService: InMemoryCacheService,
   ) {}
 
@@ -49,9 +49,9 @@ export class StaffService {
       where.departmentId = departmentId;
     }
 
-    const total = await this.prismaService.staff.count({ where });
+    const total = await this.prisma.staff.count({ where });
 
-    const staff = await this.prismaService.staff.findMany({
+    const staff = await this.prisma.staff.findMany({
       where,
       orderBy: { createdAt: "desc" },
       skip: (page - 1) * limit,
@@ -83,7 +83,7 @@ export class StaffService {
       await this.cacheService.get<FindOneStaffResponseDto>(cacheKey);
     if (cached) return cached;
 
-    const staff = await this.prismaService.staff.findFirst({
+    const staff = await this.prisma.staff.findFirst({
       where: { id, deletedAt: null },
       include: {
         role: true,
@@ -103,7 +103,7 @@ export class StaffService {
 
   async create(dto: CreateStaffDto): Promise<CreateStaffResponseDto> {
     const { name, email, phone, password, roleId, departmentId } = dto;
-    const existingStaff = await this.prismaService.staff.findFirst({
+    const existingStaff = await this.prisma.staff.findFirst({
       where: {
         OR: [{ email }, { phone }],
       },
@@ -113,44 +113,39 @@ export class StaffService {
       throw new ConflictException("Email or phone already exists");
     }
 
-    const [role, department] = await Promise.all([
-      this.prismaService.role.findUnique({ where: { id: roleId } }),
-      this.prismaService.department.findUnique({
-        where: { id: departmentId },
-      }),
-    ]);
-
-    if (!role) {
-      throw new NotFoundException("Role not found");
-    }
-
-    if (!department) {
-      throw new NotFoundException("Department not found");
-    }
-
-    const staff = await this.prismaService.staff.create({
-      data: {
-        name,
-        email,
-        phone,
-        passwordHash: hashPassword(password),
-        avatarUrl: `https://api.dicebear.com/10.x/identicon/svg?seed=${encodeURIComponent(email)}&background=%23ffffff`,
-        role: {
-          connect: { id: roleId },
+    try {
+      const staff = await this.prisma.staff.create({
+        data: {
+          name,
+          email,
+          phone,
+          passwordHash: hashPassword(password),
+          avatarUrl: `https://api.dicebear.com/10.x/identicon/svg?seed=${encodeURIComponent(email)}&background=%23ffffff`,
+          role: {
+            connect: { id: roleId },
+          },
+          department: {
+            connect: { id: departmentId },
+          },
         },
-        department: {
-          connect: { id: departmentId },
+        include: {
+          role: true,
+          department: true,
         },
-      },
-      include: {
-        role: true,
-        department: true,
-      },
-    });
+      });
 
-    await this.cacheService.clearNamespace("staff");
+      await this.cacheService.clearNamespace("staff");
 
-    return toDto(CreateStaffResponseDto, { staff });
+      return toDto(CreateStaffResponseDto, { staff });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2025"
+      ) {
+        throw new NotFoundException("Role or department not found");
+      }
+      throw e;
+    }
   }
 
   async update(
@@ -159,7 +154,7 @@ export class StaffService {
     user: { id: string; role: { code: string } },
   ): Promise<UpdateStaffResponseDto> {
     const { name, phone, roleId, departmentId } = dto;
-    const staff = await this.prismaService.staff.findFirst({
+    const staff = await this.prisma.staff.findFirst({
       where: { id, deletedAt: null },
       include: {
         role: true,
@@ -185,7 +180,7 @@ export class StaffService {
     }
 
     if (phone !== undefined) {
-      const existingPhone = await this.prismaService.staff.findFirst({
+      const existingPhone = await this.prisma.staff.findFirst({
         where: {
           phone,
           id: { not: id },
@@ -204,14 +199,6 @@ export class StaffService {
         throw new ForbiddenException("Forbidden");
       }
 
-      const role = await this.prismaService.role.findUnique({
-        where: { id: roleId },
-      });
-
-      if (!role) {
-        throw new NotFoundException("Role not found");
-      }
-
       updateData.role = { connect: { id: roleId } };
     }
 
@@ -220,53 +207,57 @@ export class StaffService {
         throw new ForbiddenException("Forbidden");
       }
 
-      const department = await this.prismaService.department.findUnique({
-        where: { id: departmentId },
-      });
-
-      if (!department) {
-        throw new NotFoundException("Department not found");
-      }
-
       updateData.department = { connect: { id: departmentId } };
     }
 
-    const updatedStaff = await this.prismaService.staff.update({
-      where: { id },
-      data: updateData,
-      include: {
-        role: true,
-        department: true,
-      },
-    });
+    try {
+      const updatedStaff = await this.prisma.staff.update({
+        where: { id },
+        data: updateData,
+        include: {
+          role: true,
+          department: true,
+        },
+      });
 
-    await Promise.all([
-      this.cacheService.del(this.cacheService.buildKey("staff", id)),
-      this.cacheService.clearNamespace("staff"),
-    ]);
+      await Promise.all([
+        this.cacheService.del(this.cacheService.buildKey("staff", id)),
+        this.cacheService.clearNamespace("staff"),
+      ]);
 
-    return toDto(UpdateStaffResponseDto, { staff: updatedStaff });
+      return toDto(UpdateStaffResponseDto, { staff: updatedStaff });
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2025"
+      ) {
+        throw new NotFoundException("Role or department not found");
+      }
+      throw e;
+    }
   }
 
   async remove(id: string): Promise<{ message: string }> {
-    const staff = await this.prismaService.staff.findFirst({
-      where: { id, deletedAt: null },
-    });
+    try {
+      await this.prisma.staff.update({
+        where: { id },
+        data: { deletedAt: new Date() },
+      });
 
-    if (!staff) {
-      throw new NotFoundException("Staff not found");
+      await Promise.all([
+        this.cacheService.del(this.cacheService.buildKey("staff", id)),
+        this.cacheService.clearNamespace("staff"),
+      ]);
+
+      return { message: "Staff deleted successfully" };
+    } catch (e) {
+      if (
+        e instanceof Prisma.PrismaClientKnownRequestError &&
+        e.code === "P2025"
+      ) {
+        throw new NotFoundException("Staff not found");
+      }
+      throw e;
     }
-
-    await this.prismaService.staff.update({
-      where: { id },
-      data: { deletedAt: new Date() },
-    });
-
-    await Promise.all([
-      this.cacheService.del(this.cacheService.buildKey("staff", id)),
-      this.cacheService.clearNamespace("staff"),
-    ]);
-
-    return { message: "Staff deleted successfully" };
   }
 }
