@@ -18,6 +18,7 @@ import { TaskPriorityModule } from "./modules/task-priority/task-priority.module
 import { PhaseStatusModule } from "./modules/phase-status/phase-status.module";
 import { MilestoneStatusModule } from "./modules/milestone-status/milestone-status.module";
 import { MemberRoleModule } from "./modules/member-role/member-role.module";
+import { InMemoryCacheModule } from "./infrastructure/cache/in-memory-cache.module";
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { MemberRoleModule } from "./modules/member-role/member-role.module";
       envFilePath: [".env"],
       load: [appConfig, databaseConfig, authConfig],
     }),
+    InMemoryCacheModule,
     PrismaModule,
     HealthModule,
     AuthModule,

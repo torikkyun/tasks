@@ -2,9 +2,10 @@ import { Controller, Get } from "@nestjs/common";
 import { RoleService } from "./role.service";
 import { Public } from "@/common/decorators/public.decorator";
 import { FindAllRoleResponseDto } from "./dto/find-all-role.dto";
-import { ApiResponse } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @Controller("roles")
+@ApiTags("Roles")
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 

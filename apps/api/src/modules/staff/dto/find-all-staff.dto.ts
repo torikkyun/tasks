@@ -25,7 +25,7 @@ export class FindAllStaffResponseDto {
   @ApiProperty({ type: [StaffDto] })
   @Expose()
   @Type(() => StaffDto)
-  staffs!: StaffDto[];
+  staff!: StaffDto[];
 
   @ApiProperty({ type: MetaDto })
   @Expose()

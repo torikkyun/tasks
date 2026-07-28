@@ -1,7 +1,7 @@
 import { Test, TestingModule } from "@nestjs/testing";
 import { StaffController } from "./staff.controller";
 import { StaffService } from "./staff.service";
-import { StaffQueryDto } from "./dto/query-staff.dto";
+import { QueryStaffDto } from "./dto/query-staff.dto";
 
 describe("StaffController", () => {
   let controller: StaffController;
@@ -40,7 +40,7 @@ describe("StaffController", () => {
 
     service.findAll.mockResolvedValue(expected);
 
-    await expect(controller.findAll(new StaffQueryDto())).resolves.toEqual(
+    await expect(controller.findAll(new QueryStaffDto())).resolves.toEqual(
       expected,
     );
   });

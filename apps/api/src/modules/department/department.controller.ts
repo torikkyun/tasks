@@ -2,9 +2,10 @@ import { Controller, Get } from "@nestjs/common";
 import { DepartmentService } from "./department.service";
 import { Public } from "@/common/decorators/public.decorator";
 import { FindAllDepartmentResponseDto } from "./dto/find-all-department.dto";
-import { ApiResponse } from "@nestjs/swagger";
+import { ApiResponse, ApiTags } from "@nestjs/swagger";
 
 @Controller("departments")
+@ApiTags("Departments")
 export class DepartmentController {
   constructor(private readonly departmentService: DepartmentService) {}
 

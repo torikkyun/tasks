@@ -34,7 +34,7 @@ model Staff {
 
   @@index([roleId])
   @@index([departmentId])
-  @@map("staffs")
+  @@map("staff")
 }
 
 model Role {
@@ -46,7 +46,7 @@ model Role {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  staffs Staff[]
+  staff Staff[]
 
   @@map("roles")
 }
@@ -60,7 +60,7 @@ model Department {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @default(now()) @updatedAt @map("updated_at")
 
-  staffs Staff[]
+  staff Staff[]
 
   @@map("departments")
 }
