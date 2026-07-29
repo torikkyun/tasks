@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsDateString, IsOptional, IsUUID } from "class-validator";
-import { ProjectMemberDto } from "./project.dto";
 import { Exclude, Expose, Type } from "class-transformer";
+import { ProjectMemberDto } from "./project-member.dto";
 
 export class CreateProjectMemberDto {
   @IsUUID()
