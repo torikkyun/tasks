@@ -9,10 +9,9 @@ import {
   Query,
 } from "@nestjs/common";
 import { StaffService } from "./staff.service";
-import { QueryStaffDto } from "./dto/query-staff.dto";
+import { FindAllStaffResponseDto, QueryStaffDto } from "./dto/query-staff.dto";
 import { CreateStaffDto, CreateStaffResponseDto } from "./dto/create-staff.dto";
 import { UpdateStaffDto, UpdateStaffResponseDto } from "./dto/update-staff.dto";
-import { FindAllStaffResponseDto } from "./dto/find-all-staff.dto";
 import { FindOneStaffResponseDto } from "./dto/find-one-staff.dto";
 import { ApiBearerAuth, ApiResponse, ApiTags } from "@nestjs/swagger";
 import { Roles } from "@/common/decorators/roles.decorator";

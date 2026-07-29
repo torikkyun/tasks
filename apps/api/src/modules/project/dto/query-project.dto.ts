@@ -1,10 +1,10 @@
-import { MetaDto } from "@/common/dto/meta.dto";
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
 import { IsInt, IsOptional, IsString, IsUUID, Min } from "class-validator";
-import { StaffDto } from "./staff.dto";
+import { ProjectDto } from "./project.dto";
+import { MetaDto } from "@/common/dto/meta.dto";
 
-export class QueryStaffDto {
+export class QueryProjectDto {
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -21,26 +21,21 @@ export class QueryStaffDto {
 
   @IsOptional()
   @IsString()
-  @ApiPropertyOptional({ description: "Search by name or email" })
+  @ApiPropertyOptional({ description: "Search by name" })
   search?: string;
 
   @IsOptional()
   @IsUUID()
-  @ApiPropertyOptional({ description: "Filter by role id" })
-  roleId?: string;
-
-  @IsOptional()
-  @IsUUID()
-  @ApiPropertyOptional({ description: "Filter by department id" })
-  departmentId?: string;
+  @ApiPropertyOptional({ description: "Filter by project status id" })
+  statusId?: string;
 }
 
 @Exclude()
-export class FindAllStaffResponseDto {
-  @ApiProperty({ type: [StaffDto] })
+export class FindAllProjectsResponseDto {
+  @ApiProperty({ type: [ProjectDto] })
   @Expose()
-  @Type(() => StaffDto)
-  staff!: StaffDto[];
+  @Type(() => ProjectDto)
+  projects!: ProjectDto[];
 
   @ApiProperty({ type: MetaDto })
   @Expose()

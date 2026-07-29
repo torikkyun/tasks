@@ -5,10 +5,9 @@ import {
   NotFoundException,
 } from "@nestjs/common";
 import { PrismaService } from "@/infrastructure/database/prisma.service";
-import { QueryStaffDto } from "./dto/query-staff.dto";
+import { FindAllStaffResponseDto, QueryStaffDto } from "./dto/query-staff.dto";
 import { CreateStaffDto, CreateStaffResponseDto } from "./dto/create-staff.dto";
 import { UpdateStaffDto, UpdateStaffResponseDto } from "./dto/update-staff.dto";
-import { FindAllStaffResponseDto } from "./dto/find-all-staff.dto";
 import { FindOneStaffResponseDto } from "./dto/find-one-staff.dto";
 import { toDto } from "@/common/helpers/to-dto.helper";
 import { Prisma } from "@/generated/prisma/client";

@@ -13,6 +13,7 @@ import { RolesGuard } from "./common/guards/roles.guard";
 import { RoleModule } from "./modules/role/role.module";
 import { DepartmentModule } from "./modules/department/department.module";
 import { ProjectStatusModule } from "./modules/project-status/project-status.module";
+import { ProjectModule } from "./modules/project/project.module";
 import { TaskStatusModule } from "./modules/task-status/task-status.module";
 import { TaskPriorityModule } from "./modules/task-priority/task-priority.module";
 import { PhaseStatusModule } from "./modules/phase-status/phase-status.module";
@@ -35,6 +36,7 @@ import { InMemoryCacheModule } from "./infrastructure/cache/in-memory-cache.modu
     RoleModule,
     DepartmentModule,
     ProjectStatusModule,
+    ProjectModule,
     TaskStatusModule,
     TaskPriorityModule,
     PhaseStatusModule,

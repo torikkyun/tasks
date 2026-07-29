@@ -46,6 +46,89 @@ async function seedDevelopment() {
     },
   });
 
+  const projectStatuses = [
+    { name: "Lên kế hoạch", code: "PLANNING" },
+    { name: "Đang thực hiện", code: "IN_PROGRESS" },
+    { name: "Tạm dừng", code: "ON_HOLD" },
+    { name: "Hoàn thành", code: "COMPLETED" },
+    { name: "Đã hủy", code: "CANCELLED" },
+  ];
+  for (const s of projectStatuses) {
+    await prisma.projectStatus.upsert({
+      where: { code: s.code },
+      update: {},
+      create: s,
+    });
+  }
+
+  const taskStatuses = [
+    { name: "Cần làm", code: "TODO" },
+    { name: "Đang làm", code: "IN_PROGRESS" },
+    { name: "Chờ review", code: "IN_REVIEW" },
+    { name: "Hoàn thành", code: "DONE" },
+    { name: "Đã hủy", code: "CANCELLED" },
+  ];
+  for (const s of taskStatuses) {
+    await prisma.taskStatus.upsert({
+      where: { code: s.code },
+      update: {},
+      create: s,
+    });
+  }
+
+  const taskPriorities = [
+    { name: "Thấp", code: "LOW" },
+    { name: "Trung bình", code: "MEDIUM" },
+    { name: "Cao", code: "HIGH" },
+    { name: "Khẩn cấp", code: "URGENT" },
+  ];
+  for (const p of taskPriorities) {
+    await prisma.taskPriority.upsert({
+      where: { code: p.code },
+      update: {},
+      create: p,
+    });
+  }
+
+  const phaseStatuses = [
+    { name: "Chưa bắt đầu", code: "NOT_STARTED" },
+    { name: "Đang thực hiện", code: "IN_PROGRESS" },
+    { name: "Hoàn thành", code: "COMPLETED" },
+  ];
+  for (const p of phaseStatuses) {
+    await prisma.phaseStatus.upsert({
+      where: { code: p.code },
+      update: {},
+      create: p,
+    });
+  }
+
+  const milestoneStatuses = [
+    { name: "Chưa đạt", code: "PENDING" },
+    { name: "Đã đạt", code: "ACHIEVED" },
+    { name: "Trễ hạn", code: "MISSED" },
+  ];
+  for (const m of milestoneStatuses) {
+    await prisma.milestoneStatus.upsert({
+      where: { code: m.code },
+      update: {},
+      create: m,
+    });
+  }
+
+  const memberRoles = [
+    { name: "Trưởng dự án", code: "PROJECT_LEAD" },
+    { name: "Thành viên", code: "MEMBER" },
+    { name: "Quan sát viên", code: "VIEWER" },
+  ];
+  for (const r of memberRoles) {
+    await prisma.memberRole.upsert({
+      where: { code: r.code },
+      update: {},
+      create: r,
+    });
+  }
+
   console.log("Seed data created for development environment.");
 }
 
