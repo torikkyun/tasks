@@ -14,6 +14,7 @@ import { RoleModule } from "./modules/role/role.module";
 import { DepartmentModule } from "./modules/department/department.module";
 import { ProjectStatusModule } from "./modules/project-status/project-status.module";
 import { ProjectModule } from "./modules/project/project.module";
+import { TaskModule } from "./modules/task/task.module";
 import { TaskStatusModule } from "./modules/task-status/task-status.module";
 import { TaskPriorityModule } from "./modules/task-priority/task-priority.module";
 import { PhaseStatusModule } from "./modules/phase-status/phase-status.module";
@@ -37,6 +38,7 @@ import { InMemoryCacheModule } from "./infrastructure/cache/in-memory-cache.modu
     DepartmentModule,
     ProjectStatusModule,
     ProjectModule,
+    TaskModule,
     TaskStatusModule,
     TaskPriorityModule,
     PhaseStatusModule,

@@ -24,6 +24,8 @@ import {
 } from "../dto/project/update-project.dto";
 import { FindOneProjectResponseDto } from "../dto/project/find-one-project.dto";
 import { Roles } from "@/common/decorators/roles.decorator";
+import { FindProjectGanttQueryDto } from "../dto/gantt/find-project-gantt-query.dto";
+import { FindProjectGanttResponseDto } from "../dto/gantt/find-project-gantt.dto";
 
 @Controller("projects")
 @ApiTags("Projects")
@@ -52,6 +54,20 @@ export class ProjectController {
   @Get(":id")
   async findOne(@Param("id") id: string): Promise<FindOneProjectResponseDto> {
     return await this.projectService.findOne(id);
+  }
+
+  @ApiResponse({
+    status: 200,
+    description: "Project gantt data retrieved successfully",
+    type: FindProjectGanttResponseDto,
+  })
+  @ApiResponse({ status: 404, description: "Project not found" })
+  @Get(":projectId/gantt")
+  async findGantt(
+    @Param("projectId") projectId: string,
+    @Query() query: FindProjectGanttQueryDto,
+  ): Promise<FindProjectGanttResponseDto> {
+    return await this.projectService.findGantt(projectId, query);
   }
 
   @ApiResponse({

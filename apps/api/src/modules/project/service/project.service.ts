@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
 } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "@/infrastructure/database/prisma.service";
 import { CreateProjectDto } from "../dto/project/create-project.dto";
 import { UpdateProjectDto } from "../dto/project/update-project.dto";
@@ -15,10 +16,213 @@ import { CreateProjectResponseDto } from "../dto/project/create-project.dto";
 import { UpdateProjectResponseDto } from "../dto/project/update-project.dto";
 import { toDto } from "@/common/helpers/to-dto.helper";
 import { Prisma } from "@/generated/prisma/client";
+import { randomUUID } from "node:crypto";
+import { mkdir, writeFile } from "node:fs/promises";
+import { join } from "node:path";
+import { AttachmentDto } from "../../task/dto/attachment/attachment.dto";
+import { Express } from "express";
+import { FindProjectGanttQueryDto } from "../dto/gantt/find-project-gantt-query.dto";
+import { FindProjectGanttResponseDto } from "../dto/gantt/find-project-gantt.dto";
 
 @Injectable()
 export class ProjectService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly configService: ConfigService,
+  ) {}
+
+  private toAttachmentDto(attachment: {
+    id: string;
+    fileName: string;
+    fileUrl: string;
+    fileSize: bigint | null;
+    mimeType: string | null;
+    createdAt: Date;
+    uploadedBy: { id: string; name: string } | null;
+  }): AttachmentDto {
+    return {
+      id: attachment.id,
+      fileName: attachment.fileName,
+      fileUrl: attachment.fileUrl,
+      fileSize:
+        attachment.fileSize === null ? null : Number(attachment.fileSize),
+      mimeType: attachment.mimeType,
+      createdAt: attachment.createdAt,
+      uploadedBy: attachment.uploadedBy!,
+    };
+  }
+
+  async createAttachment(
+    projectId: string,
+    file: Express.Multer.File,
+    userId: string,
+  ): Promise<AttachmentDto> {
+    const project = await this.prisma.project.findFirst({
+      where: { id: projectId, deletedAt: null },
+      select: { id: true },
+    });
+    if (!project) throw new NotFoundException("Project not found");
+
+    const uploadPath = this.configService.get<string>("app.uploadPath");
+    if (!uploadPath)
+      throw new BadRequestException("Upload path not configured");
+
+    const attachmentDir = join(uploadPath, "attachments");
+    await mkdir(attachmentDir, { recursive: true });
+
+    const safeName = `${randomUUID()}-${file.originalname}`.replace(
+      /[^a-zA-Z0-9._-]/g,
+      "_",
+    );
+    await writeFile(join(attachmentDir, safeName), file.buffer);
+
+    const attachment = await this.prisma.attachment.create({
+      data: {
+        fileName: file.originalname,
+        fileUrl: `/uploads/attachments/${safeName}`,
+        fileSize: BigInt(file.size),
+        mimeType: file.mimetype,
+        uploadedBy: { connect: { id: userId } },
+        project: { connect: { id: projectId } },
+      },
+      include: { uploadedBy: true },
+    });
+
+    return this.toAttachmentDto(attachment);
+  }
+
+  async findAttachments(projectId: string): Promise<AttachmentDto[]> {
+    const project = await this.prisma.project.findFirst({
+      where: { id: projectId, deletedAt: null },
+      select: { id: true },
+    });
+    if (!project) throw new NotFoundException("Project not found");
+
+    const attachments = await this.prisma.attachment.findMany({
+      where: { projectId },
+      orderBy: { createdAt: "desc" },
+      include: { uploadedBy: true },
+    });
+    return attachments.map((attachment) => this.toAttachmentDto(attachment));
+  }
+
+  async findGantt(
+    projectId: string,
+    query: FindProjectGanttQueryDto,
+  ): Promise<FindProjectGanttResponseDto> {
+    const project = await this.prisma.project.findFirst({
+      where: { id: projectId, deletedAt: null },
+      include: { status: true },
+    });
+    if (!project) throw new NotFoundException("Project not found");
+
+    const [phases, milestones, tasks, dependencies] = await Promise.all([
+      this.prisma.phase.findMany({
+        where: { projectId, ...(query.phaseId ? { id: query.phaseId } : {}) },
+        include: { status: true },
+        orderBy: { sortOrder: "asc" },
+      }),
+      this.prisma.milestone.findMany({
+        where: {
+          projectId,
+          ...(query.phaseId ? { phaseId: query.phaseId } : {}),
+        },
+        include: { status: true },
+        orderBy: { dueDate: "asc" },
+      }),
+      this.prisma.task.findMany({
+        where: {
+          projectId,
+          deletedAt: null,
+          ...(query.phaseId ? { phaseId: query.phaseId } : {}),
+          ...(query.startDate || query.endDate
+            ? {
+                AND: [
+                  query.startDate
+                    ? { endDate: { gte: new Date(query.startDate) } }
+                    : {},
+                  query.endDate
+                    ? { startDate: { lte: new Date(query.endDate) } }
+                    : {},
+                ],
+              }
+            : {}),
+        },
+        include: {
+          assignee: true,
+          status: true,
+          priority: true,
+        },
+        orderBy: [{ sortOrder: "asc" }, { createdAt: "asc" }],
+      }),
+      this.prisma.taskDependency.findMany({
+        where: {
+          predecessorTask: { projectId, deletedAt: null },
+          successorTask: { projectId, deletedAt: null },
+        },
+      }),
+    ]);
+
+    const taskIds = new Set(tasks.map((task) => task.id));
+    const filteredDependencies = dependencies.filter(
+      (dependency) =>
+        taskIds.has(dependency.predecessorTaskId) &&
+        taskIds.has(dependency.successorTaskId),
+    );
+
+    return {
+      project: {
+        id: project.id,
+        name: project.name,
+        startDate: project.startDate,
+        endDate: project.endDate,
+        status: { code: project.status.code },
+      },
+      phases: phases.map((phase) => ({
+        id: phase.id,
+        name: phase.name,
+        sortOrder: phase.sortOrder,
+        startDate: phase.startDate,
+        endDate: phase.endDate,
+        status: { code: phase.status.code },
+      })),
+      milestones: milestones.map((milestone) => ({
+        id: milestone.id,
+        name: milestone.name,
+        dueDate: milestone.dueDate,
+        completedDate: milestone.completedDate,
+        phaseId: milestone.phaseId,
+        status: { code: milestone.status.code },
+      })),
+      tasks: tasks.map((task) => ({
+        id: task.id,
+        name: task.name,
+        startDate: task.startDate,
+        endDate: task.endDate,
+        progressPercent: task.progressPercent,
+        sortOrder: task.sortOrder,
+        parentTaskId: task.parentTaskId,
+        phaseId: task.phaseId,
+        milestoneId: task.milestoneId,
+        assignee: task.assignee
+          ? {
+              id: task.assignee.id,
+              name: task.assignee.name,
+              avatarUrl: task.assignee.avatarUrl,
+            }
+          : null,
+        status: { id: task.status.id, code: task.status.code },
+        priority: { id: task.priority.id, code: task.priority.code },
+      })),
+      dependencies: filteredDependencies.map((dependency) => ({
+        id: dependency.id,
+        predecessorTaskId: dependency.predecessorTaskId,
+        successorTaskId: dependency.successorTaskId,
+        dependencyType: dependency.dependencyType,
+        lagDays: dependency.lagDays,
+      })),
+    };
+  }
 
   async findAll(query: QueryProjectDto): Promise<FindAllProjectsResponseDto> {
     const { page = 1, limit = 10, search, statusId } = query;
