@@ -11,7 +11,7 @@ import {
   Length,
   Min,
 } from "class-validator";
-import { TaskListItemDto } from "./task.dto";
+import { TaskListItemDto } from "../../../shared/dto/task.dto";
 
 export class CreateProjectTaskDto {
   @ApiProperty({ example: "Task 1" })

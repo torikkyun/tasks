@@ -7,7 +7,7 @@ import {
   IsUUID,
   Length,
 } from "class-validator";
-import { ProjectMilestoneDto } from "./milestone.dto";
+import { ProjectMilestoneDto } from "../../../shared/dto/milestone.dto";
 
 export class UpdateProjectMilestoneDto {
   @ApiPropertyOptional({ example: "Milestone 1" })

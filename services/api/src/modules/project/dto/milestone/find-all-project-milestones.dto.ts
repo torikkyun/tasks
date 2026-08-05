@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { ProjectMilestoneDto } from "./milestone.dto";
+import { ProjectMilestoneDto } from "../../../shared/dto/milestone.dto";
 
 @Exclude()
 export class FindAllProjectMilestonesResponseDto {

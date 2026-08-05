@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { PhaseStatusDto } from "@/modules/phase-status/dto/phase-status.dto";
+import { PhaseStatusDto } from "./phase-status.dto";
 
 @Exclude()
 export class ProjectMilestoneStatusDto {

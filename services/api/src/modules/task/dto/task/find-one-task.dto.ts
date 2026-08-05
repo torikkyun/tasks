@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { TaskDetailDto } from "./task.dto";
+import { TaskDetailDto } from "../../../shared/dto/task.dto";
 
 @Exclude()
 export class FindOneProjectTaskResponseDto {

@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { ProjectPhaseDto } from "./phase.dto";
+import { ProjectPhaseDto } from "../../../shared/dto/phase.dto";
 
 @Exclude()
 export class FindAllProjectPhasesResponseDto {

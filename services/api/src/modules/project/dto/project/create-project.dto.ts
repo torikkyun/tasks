@@ -8,7 +8,7 @@ import {
   IsUUID,
   Length,
 } from "class-validator";
-import { ProjectDto } from "./project.dto";
+import { ProjectDto } from "../../../shared/dto/project.dto";
 
 export class CreateProjectDto {
   @ApiProperty({ example: "Project ABC" })

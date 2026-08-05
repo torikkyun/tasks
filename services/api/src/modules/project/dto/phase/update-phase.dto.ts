@@ -9,7 +9,7 @@ import {
   Length,
   Min,
 } from "class-validator";
-import { ProjectPhaseDto } from "./phase.dto";
+import { ProjectPhaseDto } from "../../../shared/dto/phase.dto";
 
 export class UpdateProjectPhaseDto {
   @ApiPropertyOptional({ example: "Phase 1" })

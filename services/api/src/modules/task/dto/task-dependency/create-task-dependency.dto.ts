@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
 import { IsInt, IsOptional, IsUUID } from "class-validator";
-import { TaskDependencyDto } from "../task/task.dto";
+import { TaskDependencyDto } from "../../../shared/dto/task.dto";
 
 export class CreateTaskDependencyDto {
   @ApiProperty({ example: "123e4567-e89b-12d3-a456-426614174000" })

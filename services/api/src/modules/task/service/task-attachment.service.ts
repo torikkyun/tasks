@@ -8,7 +8,7 @@ import { randomUUID } from "node:crypto";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import { PrismaService } from "@/infrastructure/database/prisma.service";
-import { AttachmentDto } from "../dto/attachment/attachment.dto";
+import { AttachmentDto } from "../../shared/dto/attachment.dto";
 
 interface AttachmentUploadFile {
   originalname: string;

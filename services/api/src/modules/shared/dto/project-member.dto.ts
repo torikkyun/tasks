@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
-import { MemberRoleDto } from "@/modules/member-role/dto/member-role.dto";
+import { MemberRoleDto } from "./member-role.dto";
 
 @Exclude()
 export class MemberDto {

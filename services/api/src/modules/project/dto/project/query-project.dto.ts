@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { Exclude, Expose, Type } from "class-transformer";
 import { IsInt, IsOptional, IsString, IsUUID, Min } from "class-validator";
-import { ProjectDto } from "./project.dto";
+import { ProjectDto } from "../../../shared/dto/project.dto";
 import { MetaDto } from "@/common/dto/meta.dto";
 
 export class QueryProjectDto {

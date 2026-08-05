@@ -20,6 +20,6 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["node", "Multer", "jest"]
+    "types": ["node", "jest", "multer"]
   }
 }

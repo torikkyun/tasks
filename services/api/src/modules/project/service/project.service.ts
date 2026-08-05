@@ -19,7 +19,7 @@ import { Prisma } from "@/generated/prisma/client";
 import { randomUUID } from "node:crypto";
 import { mkdir, writeFile } from "node:fs/promises";
 import { join } from "node:path";
-import { AttachmentDto } from "../../task/dto/attachment/attachment.dto";
+import { AttachmentDto } from "../../shared/dto/attachment.dto";
 import { Express } from "express";
 import { FindProjectGanttQueryDto } from "../dto/gantt/find-project-gantt-query.dto";
 import { FindProjectGanttResponseDto } from "../dto/gantt/find-project-gantt.dto";
