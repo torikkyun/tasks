@@ -2,26 +2,26 @@
   "name": "tasks",
   "version": "1.0.0",
   "description": "",
+  "keywords": [],
+  "license": "ISC",
+  "author": "torikkyun",
+  "type": "module",
   "scripts": {
     "format": "oxfmt",
     "lint": "oxlint",
     "dev": "turbo run dev",
     "build": "turbo run build"
   },
-  "keywords": [],
-  "author": "torikkyun",
-  "license": "ISC",
+  "devDependencies": {
+    "oxfmt": "^0.60.0",
+    "oxlint": "^1.75.0",
+    "turbo": "^2.10.6"
+  },
   "devEngines": {
     "packageManager": {
       "name": "pnpm",
       "version": "^11.10.0",
       "onFail": "download"
     }
-  },
-  "type": "module",
-  "devDependencies": {
-    "oxfmt": "^0.60.0",
-    "oxlint": "^1.75.0",
-    "turbo": "^2.10.6"
   }
 }
