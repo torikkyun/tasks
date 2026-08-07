@@ -1,11 +1,15 @@
 import * as fs from "node:fs";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
+import { Button } from "@/components/ui/button";
+import { ArrowUpIcon } from "lucide-react";
 
 const filePath = "count.txt";
 
 async function readCount() {
-  return parseInt(await fs.promises.readFile(filePath, "utf-8").catch(() => "0"));
+  return parseInt(
+    await fs.promises.readFile(filePath, "utf-8").catch(() => "0"),
+  );
 }
 
 const getCount = createServerFn({
@@ -31,15 +35,34 @@ function Home() {
   const state = Route.useLoaderData();
 
   return (
-    <button
-      type="button"
-      onClick={() => {
-        updateCount({ data: 1 }).then(() => {
-          router.invalidate();
-        });
-      }}
-    >
-      Add 1 to {state}?
-    </button>
+    <>
+      <Button
+        type="button"
+        onClick={() => {
+          updateCount({ data: 1 }).then(() => {
+            router.invalidate();
+          });
+        }}
+      >
+        Add 1 to {state}?
+      </Button>
+      <button
+        type="button"
+        onClick={() => {
+          updateCount({ data: 1 }).then(() => {
+            router.invalidate();
+          });
+        }}
+      >
+        Add 1 to {state}?
+      </button>
+
+      <div className="flex flex-wrap items-center gap-2 md:flex-row">
+        <Button variant="outline">Button</Button>
+        <Button variant="outline" size="icon" aria-label="Submit">
+          <ArrowUpIcon />
+        </Button>
+      </div>
+    </>
   );
 }
