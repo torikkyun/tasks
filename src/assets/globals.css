@@ -1,0 +1,364 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Brand accent scale — 5-stop chromatic system */
+  --color-accent-purple: var(--accent-purple);
+  --color-accent-pink: var(--accent-pink);
+  --color-accent-blue: var(--accent-blue);
+  --color-accent-blue-deep: var(--accent-blue-deep);
+  --color-accent-blue-info: var(--accent-blue-info);
+  --color-accent-orange: var(--accent-orange);
+  --color-accent-green: var(--accent-green);
+  --color-accent-yellow: var(--accent-yellow);
+  --color-accent-red: var(--accent-red);
+
+  /* Brand ink/body scale */
+  --color-ink: var(--ink);
+  --color-ink-strong: var(--ink-strong);
+  --color-body: var(--body);
+  --color-body-mid: var(--body-mid);
+  --color-mute: var(--mute);
+  --color-mute-soft: var(--mute-soft);
+  --color-hairline: var(--hairline);
+  --color-canvas: var(--canvas);
+
+  /* Brand font families */
+  --font-sans: var(--font-family-sans);
+  --font-mono: var(--font-family-mono);
+
+  /* Brand button/card radius (design spec: 4px button, 8px card) */
+  --radius-btn: 4px;
+  --radius-card: 8px;
+  --radius-full: 9999px;
+}
+
+:root {
+  --radius: 0.5rem;
+
+  /* Core surfaces mapped to Webflow-inspired canvas/ink */
+  --background: #ffffff;
+  --foreground: #080808;
+  --card: #ffffff;
+  --card-foreground: #080808;
+  --popover: #ffffff;
+  --popover-foreground: #080808;
+
+  /* Primary CTA — near-black, never the accents */
+  --primary: #080808;
+  --primary-foreground: #ffffff;
+
+  --secondary: #ffffff;
+  --secondary-foreground: #080808;
+
+  --muted: #f5f5f5;
+  --muted-foreground: #5a5a5a;
+
+  --accent: #f5f5f5;
+  --accent-foreground: #080808;
+
+  --destructive: #ee1d36;
+  --destructive-foreground: #ffffff;
+
+  --border: #d8d8d8;
+  --input: #d8d8d8;
+  --ring: #080808;
+
+  /* Chart colors — 5-stop chromatic accent system */
+  --chart-1: #7a3dff;
+  --chart-2: #ed52cb;
+  --chart-3: #3b89ff;
+  --chart-4: #ff6b00;
+  --chart-5: #00d722;
+
+  --sidebar: #ffffff;
+  --sidebar-foreground: #080808;
+  --sidebar-primary: #080808;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #f5f5f5;
+  --sidebar-accent-foreground: #080808;
+  --sidebar-border: #d8d8d8;
+  --sidebar-ring: #080808;
+
+  /* Brand accent tokens */
+  --accent-purple: #7a3dff;
+  --accent-pink: #ed52cb;
+  --accent-blue: #3b89ff;
+  --accent-blue-deep: #006acc;
+  --accent-blue-info: #146ef5;
+  --accent-orange: #ff6b00;
+  --accent-green: #00d722;
+  --accent-yellow: #ffae13;
+  --accent-red: #ee1d36;
+
+  /* Brand ink/body scale */
+  --ink: #080808;
+  --ink-strong: #222222;
+  --body: #363636;
+  --body-mid: #5a5a5a;
+  --mute: #898989;
+  --mute-soft: #ababab;
+  --hairline: #d8d8d8;
+  --canvas: #ffffff;
+
+  /* Font stacks (WF Visual Sans substitute: Inter) */
+  --font-family-sans:
+    "Inter", "WF Visual Sans Variable", system-ui, -apple-system, sans-serif;
+  --font-family-mono:
+    "Inconsolata", "WFVisualSans-Mono", ui-monospace, SFMono-Regular, Menlo,
+    monospace;
+
+  /* Spacing scale (4px base) */
+  --spacing-xxs: 2px;
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+  --spacing-3xl: 32px;
+
+  /* Elevation recipes (layered drop-shadow) */
+  --shadow-level-1: 0 0 0 1px var(--hairline);
+  --shadow-level-2:
+    0 84px 24px rgba(0, 0, 0, 0), 0 54px 22px rgba(0, 0, 0, 0.01),
+    0 30px 18px rgba(0, 0, 0, 0.04), 0 13px 13px rgba(0, 0, 0, 0.08),
+    0 3px 7px rgba(0, 0, 0, 0.09);
+  --shadow-level-3:
+    0 84px 24px rgba(0, 0, 0, 0), 0 54px 22px rgba(0, 0, 0, 0.02),
+    0 30px 18px rgba(0, 0, 0, 0.06), 0 13px 13px rgba(0, 0, 0, 0.1),
+    0 3px 7px rgba(0, 0, 0, 0.12);
+  --shadow-level-4:
+    0 24px 24px rgba(0, 0, 0, 0.26), 0 6px 13px rgba(0, 0, 0, 0.29);
+}
+
+.dark {
+  /* Polarity-flipped surface (brand's dark hero/card variant) */
+  --background: #080808;
+  --foreground: #ffffff;
+  --card: #080808;
+  --card-foreground: #ffffff;
+  --popover: #080808;
+  --popover-foreground: #ffffff;
+
+  --primary: #ffffff;
+  --primary-foreground: #080808;
+
+  --secondary: #222222;
+  --secondary-foreground: #ffffff;
+
+  --muted: #222222;
+  --muted-foreground: #ababab;
+
+  --accent: #222222;
+  --accent-foreground: #ffffff;
+
+  --destructive: #ee1d36;
+  --destructive-foreground: #ffffff;
+
+  --border: rgba(255, 255, 255, 0.14);
+  --input: rgba(255, 255, 255, 0.18);
+  --ring: #ffffff;
+
+  --chart-1: #7a3dff;
+  --chart-2: #ed52cb;
+  --chart-3: #3b89ff;
+  --chart-4: #ff6b00;
+  --chart-5: #00d722;
+
+  --sidebar: #080808;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ffffff;
+  --sidebar-primary-foreground: #080808;
+  --sidebar-accent: #222222;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: rgba(255, 255, 255, 0.14);
+  --sidebar-ring: #ffffff;
+
+  --ink: #ffffff;
+  --ink-strong: #eaeaea;
+  --body: #d8d8d8;
+  --body-mid: #ababab;
+  --mute: #898989;
+  --mute-soft: #5a5a5a;
+  --hairline: rgba(255, 255, 255, 0.14);
+  --canvas: #080808;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: var(--font-family-sans);
+    letter-spacing: -0.16px;
+  }
+}
+
+@layer utilities {
+  /* Brand typography roles from DESIGN.md */
+  .text-display-xxl {
+    font-family: var(--font-family-sans);
+    font-size: 80px;
+    font-weight: 600;
+    line-height: 83.2px;
+    letter-spacing: -0.8px;
+  }
+  .text-display-xl {
+    font-family: var(--font-family-sans);
+    font-size: 56px;
+    font-weight: 600;
+    line-height: 58.24px;
+  }
+  .text-display-lg {
+    font-family: var(--font-family-sans);
+    font-size: 44.8px;
+    font-weight: 600;
+    line-height: 46.6px;
+  }
+  .text-display-md {
+    font-family: var(--font-family-sans);
+    font-size: 32px;
+    font-weight: 500;
+    line-height: 41.6px;
+  }
+  .text-display-sm {
+    font-family: var(--font-family-sans);
+    font-size: 24px;
+    font-weight: 500;
+    line-height: 31.2px;
+  }
+  .text-display-xs {
+    font-family: var(--font-family-sans);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 28px;
+  }
+  .text-eyebrow {
+    font-family: var(--font-family-sans);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 19.5px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+  }
+  .text-eyebrow-sm {
+    font-family: var(--font-family-sans);
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 12px;
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+  .text-body-lg {
+    font-family: var(--font-family-sans);
+    font-size: 28.8px;
+    font-weight: 400;
+    line-height: 46.08px;
+    letter-spacing: -0.288px;
+  }
+  .text-body-md {
+    font-family: var(--font-family-sans);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 25.6px;
+    letter-spacing: -0.16px;
+  }
+  .text-body-md-strong {
+    font-family: var(--font-family-sans);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 25.6px;
+    letter-spacing: -0.16px;
+  }
+  .text-body-sm {
+    font-family: var(--font-family-sans);
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 22.4px;
+  }
+  .text-body-sm-strong {
+    font-family: var(--font-family-sans);
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 22.4px;
+  }
+  .text-caption {
+    font-family: var(--font-family-sans);
+    font-size: 12.8px;
+    font-weight: 550;
+    line-height: 15.36px;
+  }
+  .text-caption-mono {
+    font-family: var(--font-family-mono);
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    font-feature-settings: "ss02", "ss10", "zero";
+  }
+  .text-button-md {
+    font-family: var(--font-family-sans);
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 25.6px;
+    letter-spacing: -0.16px;
+  }
+
+  /* Elevation utilities matching DESIGN.md shadow recipes */
+  .shadow-level-1 {
+    box-shadow: var(--shadow-level-1);
+  }
+  .shadow-level-2 {
+    box-shadow: var(--shadow-level-2);
+  }
+  .shadow-level-3 {
+    box-shadow: var(--shadow-level-3);
+  }
+  .shadow-level-4 {
+    box-shadow: var(--shadow-level-4);
+  }
+}
